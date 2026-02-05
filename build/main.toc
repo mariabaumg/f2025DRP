@@ -1,0 +1,8 @@
+\babel@toc {english}{}\relax 
+\beamer@sectionintoc {1}{Classical Analytic Number Theory}{4}{0}{1}
+\beamer@sectionintoc {2}{Modular and Cusp Forms}{27}{0}{2}
+\beamer@sectionintoc {3}{Hecke Operators}{41}{0}{3}
+\beamer@sectionintoc {4}{Hecke Bound}{46}{0}{4}
+\beamer@sectionintoc {5}{Newforms}{48}{0}{5}
+\beamer@sectionintoc {6}{Fricke Involution}{51}{0}{6}
+\beamer@sectionintoc {7}{The Functional Equation}{60}{0}{7}

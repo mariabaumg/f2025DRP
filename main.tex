@@ -1,0 +1,614 @@
+%Using pdfLaTeX
+
+\documentclass[10pt,compress]{beamer}
+
+\usetheme{Madrid}
+% \definecolor{rutgersScarlet}{RGB}{204,0,51}
+\definecolor{rutgersScarlet}{RGB}{115,79,150}
+\definecolor{grey}{RGB}{150,150,150}
+\usecolortheme[named=rutgersScarlet]{structure}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{title page}[default][colsep=-0bp,rounded=true]
+\setbeamerfont{structure}{family=\rmfamily,series=\bfseries}
+\usefonttheme[stillsansseriftext]{serif}
+\setbeamertemplate{blocks}[default]
+\setbeamercolor{block body}{bg=white!30,fg=black}
+\usepackage{amsthm} 
+% \newtheorem{note}{Note}[section]
+
+
+\setbeamertemplate{itemize items}[default]
+\setbeamertemplate{enumerate items}[default]
+\setbeamersize
+{
+    text margin left=0.7cm,
+    text margin right=1cm
+}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{multicol}
+\usepackage{physics}
+\usepackage{caption}
+\usepackage{graphicx,comment}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{bm}
+\usepackage{faktor}
+\usepackage{mathtools}
+\usepackage{multicol}
+
+
+\usepackage{xparse}
+
+\NewDocumentEnvironment{proof*}{o}
+  {%
+    \IfNoValueTF{#1}
+      {\begin{proof}}
+      {\begin{proof}[#1]}%
+  }
+  {%
+    \renewcommand{\qedsymbol}{}%
+    \end{proof}%
+  }
+
+\graphicspath{ {./images/} }
+
+\title[]{Analytic Number Theory: Modular Forms}
+
+\author[]{Maria Baumgartner}
+
+\date[]{December 11, 2025}
+
+\institute[]{Rutgers University}
+
+\begin{document}
+
+%Title Slide
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Motivation}
+    \begin{itemize}
+        \item Prove the functional equation for L-functions associated to Hecke eigenforms
+    \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Outline}
+    \tableofcontents
+\end{frame}
+
+\section{Classical Analytic Number Theory}
+\begin{frame}{Transforms}
+    \begin{definition}[Fourier Transform]
+        For integrable function $f:\mathbb{R}\to\mathbb{C}$, the Fourier Transform is defined by
+        \[
+            \tilde{f}(s) = \int_\mathbb{R} f(t)e^{-2\pi ist}\ dt.
+        \]
+    \end{definition}
+    % \pause
+    \begin{definition}[Mellin Transform]
+        For integrable function $f:\mathbb{R}\to\mathbb{C}$, the Mellin Transform is defined by
+        \[
+            \left(\mathcal{M}f\right)(s) = \int_0^\infty t^{s-1}f(t)\ dt.
+        \]
+    \end{definition}
+\end{frame}
+
+
+\begin{frame}{Riemann Zeta Function}
+\begin{definition}%[Riemann Zeta Function]
+For $\Re(s)>1$,
+\begin{align*}
+\zeta(s) &= \sum_{n=1}^\infty \frac{1}{n^s}\\
+  &= \prod_{p} \frac{1}{1-1/p^s}, \text{ by Lemma (Euler Product).}
+\end{align*}
+\end{definition}
+\pause
+\begin{itemize}
+    \item May be used to show infinitude of primes.
+\end{itemize}
+\end{frame}
+
+%-------------------------------------------------------------
+\begin{frame}{Dirichlet Characters}
+    \begin{definition}[Dirichlet Characters]
+        The function $\chi:\mathbb{Z}\to\mathbb{C}$ with associated modulus $q$ satisfying
+        \begin{itemize}
+            \item $\chi(ab)=\chi(a)\chi(b)$ (multiplicativity)
+            \pause
+            \item $\chi(a)=0$ iff $(a,q)\neq 1$
+            \pause
+            \item $\chi(a+q)=\chi(a)$ (i.e. periodic mod $q$)
+        \end{itemize}
+    \end{definition}
+    \pause
+    \begin{definition}[Primitive Dirichlet Characters]
+        Note that $\chi$ has \textit{quasiperiod} $d$ if $\chi(m)=\chi(n)$ for all $m$ and $n$ coprime to $q$ such that $m\equiv n \mod d$.
+        \pause
+        
+        \medskip
+
+        The smallest such $d$ is the \textit{conductor}.
+        \pause
+        
+        \medskip
+        
+        If the conductor equals $q$, then $\chi$ is primitive.
+    \end{definition}
+\end{frame}
+
+\begin{frame}{Orthogonality of Dirichlet Characters}
+    \begin{definition}[$\chi_0$]
+    \begin{align*}
+    \chi_0(n) &= \begin{cases}
+    1 & (n,q)=1,\\
+    0 & \text{otherwise.}
+    \end{cases}
+    \end{align*}
+    \pause
+    \end{definition}
+        \begin{lemma}[Orthogonality of Dirichlet Characters]
+        For a character $\chi$ with modulo $q$,
+        \[
+            \sum_{m=0}^{q-1}\chi(m) = \begin{cases}
+            \phi(q) & \chi=\chi_0,\\
+            0 & \chi\neq \chi_0.
+            \end{cases}
+        \]
+        \end{lemma}
+\end{frame}
+
+\begin{frame}{Dirichlet L-function}
+        \begin{definition}[Dirichlet L-function]
+        For Dirichlet Character $\chi$, we define $L(\chi, s)$ for $\Re(s)>1$ as
+        \begin{align*}
+            L\left(\chi,s\right) &= \sum_{n=1}^\infty \frac{\chi(n)}{n^s}\\
+            &= \prod_{p} \frac{1}{1-\chi(p)/p^s}, \text{ by Lemma (Euler product).}
+        \end{align*}
+    \end{definition}
+\end{frame}
+
+%-------------------------------------------------------------
+\begin{frame}{Nonvanishing of $L(\chi,1)$}
+    \begin{theorem}%[Nonvanishing of $L(\chi,1)$ implies Dirichlet's Theorem]
+        If $L(\chi,1)\neq 0$ for all $\chi\neq\chi_0$, then there exist infinitely many primes.
+        
+    \end{theorem}
+    \pause
+        \begin{proof*}{Proof Sketch.}
+        \begin{itemize}
+        \item We start with
+        \[
+            L\left(\chi,s\right) = \prod_{p} \frac{1}{1-\chi(p)/p^s}
+        \]
+        \pause
+        \item Then take the $\log$ of both sides,
+        \[
+            \log L(\chi,s) = \sum_p\sum_{1\leq n}\frac{\chi(p^n)}{np^{ns}}.
+        \]
+        \end{itemize}
+    \end{proof*}
+\end{frame}
+
+\begin{frame}{Proof ct.}
+\begin{proof*}{Proof Sketch ct.}
+\begin{itemize}
+    \item Considering
+        \[
+        \frac{1}{\phi(q)}\sum_{\chi\in \chi_q}\bar{\chi}(a)\log L(\chi,s)
+        \]
+        \pause
+        we plug in what we got for $\log L(\chi,s)$, getting
+        \[
+        \sum_p\sum_{1\leq n}\frac{1}{np^{ns}}\left(\frac{1}{\phi(q)}\sum_{\chi\in\chi_q} \bar{\chi}(a)\chi(p^n)\right).
+        \]
+        \end{itemize}
+\end{proof*}
+\end{frame}
+
+
+\begin{frame}{Proof ct.}
+\begin{proof*}{Proof Sketch ct.}
+\begin{itemize}
+\item We then break up the summation
+\[
+\underbrace{\sum_{\substack{p \\ p \equiv a \pmod q}} \frac{1}{p^s}}_{(1)}
+\;+\;
+\underbrace{\sum_{2\le n}\left(\sum_{\substack{p \\ p^n\equiv a \pmod q}} \frac{1}{n p^{ns}}\right)}_{(2)}.
+\]
+\pause
+\item We are able to bound (2). Thus, we must show our original expression is unbounded to prove (1) is unbounded.
+\end{itemize}
+\end{proof*}
+\end{frame}
+
+\begin{frame}{Proof ct.}
+\begin{proof}{Proof Sketch ct.}
+\begin{itemize}
+\item In particular, we show
+\[
+        \lim_{s\to 1^+}\frac{1}{\phi(q)}\sum_{\chi\in \chi_q}\bar{\chi}(a)\log L(\chi,s) = \infty
+        \]
+since this would imply (1) diverges to $\infty$.
+\pause
+\item Breaking up the sum, we observe $\chi_0$ produces a $\log(\zeta(s))$ which goes to $\infty$ as $s\to 1^+$. All other $\chi\neq\chi_0$ contribute only bounded terms if $L(\chi,1)\neq 0$.
+\pause
+\item Using orthogonality and Euler products, we can conclude with the hypothesis that there are infinitely many primes.
+\end{itemize}
+\end{proof}
+\end{frame}
+
+
+
+\begin{frame}{Further Results}
+\begin{itemize}
+\item For Complex $\chi$, $L(\chi,1)\neq 0$ (Lemma).
+
+\medskip
+
+\item For Real $\chi$, $L(\chi,1)\neq 0$ (Lemma).
+\end{itemize}
+\end{frame}
+
+
+
+\section{Modular and Cusp Forms}
+
+\begin{frame}{Modular Forms/Motivation}
+We've built up some analytic tools.
+
+\bigskip
+Why analyze Modular Forms?
+\begin{itemize}
+    \item We can choose matrices in $SL_2(\mathbb{Z})$ to yield interesting results,
+    \item Possess Fourier expansions $f(z)=\sum a_n e^{2\pi i n z}$.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Modular Forms}
+\begin{definition}[Slash Operator]
+For $\gamma\in \text{GL}_2(\mathbb{R})$,
+\begin{align*}
+f\vert_k \gamma(z) := \det \gamma^{k/2} j(\gamma,z)^{-k}f(\gamma z)
+\end{align*}
+\textbf{Note:} $\text{GL}_2(\mathbb{R}) = \{A\in M_{2\times 2}(\mathbb{R}) \mid \det(A)\neq 0\}.$
+\end{definition}
+
+\pause
+\begin{definition}[Modular Form]
+Note that $\mathcal{H}=\{z\in\mathbb{C}\mid z\text{ has positive imaginary part}\}$. A Modular Form is a function $f:\mathcal{H}\to \mathbb{C}$ associated to a weight $k$ such that
+\begin{align*}
+f\vert_k \gamma(z) = f(z)
+\end{align*}
+where $\gamma\in\Gamma$ and $\Gamma$ is a subgroup of $\text{SL}_2$.
+\pause
+\textbf{Note:}
+\begin{itemize}
+\item $\text{SL}_2(\mathbb{Z}) = \{A\in M_{2\times 2}(\mathbb{Z}) \mid \det(A)=1\}$.
+\item $\gamma z = (az+b)/(cz+d)$ and $j(\gamma,z)=cz+d$.
+\end{itemize}
+\end{definition}
+\end{frame}
+
+
+
+
+\begin{frame}{Cusp Forms}
+\begin{definition}[Cusp Form]
+Function $f:\mathcal{H}\to \mathbb{C}$ in modular form and vanishes at $i\infty$.
+\begin{itemize}
+\item Vanish at every cusp
+\end{itemize}
+\end{definition}
+
+\pause
+Further:
+\begin{itemize}
+    \item If $f$ has weight $k$, then $f$ is a weight $k$ cusp form iff $f(\infty)=0$ (Lemma).
+    \pause
+    \item If $f$ has fourier expansion:
+          \[
+          f(z) = \sum_{0\leq m} a_m e^{2\pi i m z}.
+          \]
+          then $a_0=0$.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Eisenstein Series and Delta Function}
+    \begin{definition}[Eisenstein series]
+\begin{align*}
+E_k(z) &= \sum\sum_{(m,n)\neq(0,0)} \frac{1}{(mz+n)^k}\\
+&= 1 - \frac{2k}{B_k}\sum_{1\leq m} \sigma_{k-1}(m) e^{2\pi i mz}, \text{ by Lemma (Fourier Expansion)}.
+\end{align*}
+\end{definition}
+
+\end{frame}
+
+\begin{frame}{Eisenstein Series and Delta Function}
+\begin{definition}[$\Delta$-Function]
+\[
+\Delta(z)=\frac{E_4(z)^3 - E_6(z)^2}{1728}.
+\]
+\end{definition}
+
+\pause
+Note:
+\begin{itemize}
+    \item $\Delta$ is a weight 12 cusp form.
+    \pause
+    \item Non-vanishing of $\Delta$ on $\mathcal{H}$ except for a simple zero at $i\infty$ can be shown via the Valence Formula (Lemma).
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Structure of $M_k$}
+In the space $M_k$ of modular forms of weight $k$, the following properties hold:
+\begin{itemize}
+\item If $k<0$ or odd, $M_k=\emptyset$.
+\item If $k=0$, $M_k=\mathbb{C}$.
+\item If $k=2$, then $M_k=\emptyset$.
+\item If $4\leq k\leq 10$ is even, $M_k=\mathbb{C}\cdot E_k$.
+\item If $k\geq 12$, then $M_k=\Delta M_{k-12}\oplus \mathbb{C}E_{k}$
+\end{itemize}
+
+\medskip
+\pause
+Further,
+\[
+M_k = \Delta M_{k-12} \;\oplus\; \mathbb{C} E_k.
+\]
+
+\pause
+\medskip
+
+Consequences:
+\begin{itemize}
+    \item All modular forms are built from $E_4$, $E_6$, and $\Delta$.
+    \item $M_{k+12} \in \mathbb{C}[E_4,E_6]$ (Proven via induction.)
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\section{Hecke Operators}
+\begin{frame}{Hecke Operators}
+\begin{definition}[Hecke Operator]
+Acts on function $f\in M_k(\Gamma_0(N))$ as
+\begin{align*}
+(T_n f)(z) = n^{k/2-1} \sum_{\delta\in \Delta_n^N} f\vert_k \delta(z).
+\end{align*}
+\textbf{Remark:} can think of Hecke operators as an averaging operator.
+\end{definition}
+\pause
+Hecke operators have the property:
+\[
+T_m T_n = T_{mn} \quad \text{if } (m,n)=1.
+\]
+
+\pause
+If $f$ has fourier expansion
+\[
+f(z) = \sum_{1\leq m}c_m e^{2\pi imz}
+\]
+with $c_1=1$ and there exists $\lambda_n$ s.t. $T_n f =\lambda_n f$ for all $n$, then
+\[
+c_{mn}=c_mc_n \quad \forall (m,n)=1.
+\]
+\end{frame}
+
+
+\begin{frame}{How Hecke Operators Act}
+\begin{lemma}
+    For $f$ with Fourier expansion $f(z)=\sum_{0\leq m} c_m e^{2\pi imz}$ then,
+\[
+T_n f(z)
+= \sum_{0\leq m}
+    \left( \sum_{d\mid (m,n)} \chi_0^N(d) d^{k-1} c_{mn/d^2} \right)
+      e^{2\pi i mz}.
+\]
+\end{lemma}
+
+\pause
+Key consequences:
+\begin{itemize}
+    \item $T_n$ preserves cusp forms.
+    \item Hecke operators commute and are self-adjoint under the Petersson inner product.
+\end{itemize}
+
+Thus $S_k(\Gamma_0(N))$ has a basis of simultaneous eigenforms.
+\end{frame}
+
+\section{Hecke Bound}
+\begin{frame}{Hecke Bound (Used in L-function Analysis)}
+Note that, for a cusp form of weight $k$:
+\[
+|a_n| \ll n^{k/2}.
+\]
+
+\pause
+Why this matters:
+\begin{itemize}
+    \item Ensures L-function for cusp forms, $L(f,s)=\sum a_n n^{-s}$, converges absolutely for $\Re(s)>1+\frac{k}{2}$.
+    \item Key part of deriving the functional equation for the L-functions associated with cusp forms.
+\end{itemize}
+
+\end{frame}
+
+
+\section{Newforms}
+
+\begin{frame}{Newforms}
+\begin{itemize}
+    \item For level $N$, cusp forms decompose into $S_k^{\mathrm{old}}$ and $S_k^{\mathrm{new}}$
+    
+    \medskip
+
+    \item A level $N$ \textbf{newform} is an $f\in S_k^{\mathrm{new}}$ such that $f$ is a normalized simultaneous eigenform for all $T_n$ with $(n,N)=1$.
+    
+    \medskip
+
+
+    \pause
+    \item Key property: \textbf{multiplicity one}.
+          \[
+          f,g \in S_k^{\mathrm{new}}(\Gamma_0(N)),\ 
+          \lambda_n(f)=\lambda_n(g)\quad \forall (n,N)=1 \quad 
+          \Rightarrow f=g.
+          \]
+\end{itemize}
+\end{frame}
+
+%-------------------------------------------------------------
+\begin{frame}{Newforms}
+\begin{theorem}
+A level $N$ newform $f$ is a normalized simultaneous eigenform of all Hecke operators $T_n$.
+\end{theorem}
+\begin{itemize}
+\item If $f$ is a newform and $T_n f = \lambda_n f$ for $(n,N)=1$, then $T_m f = \lambda_m f \quad \text{for all } m.$
+\item Note that proof makes use of multiplicity one principle.
+\end{itemize}
+\end{frame}
+
+%-------------------------------------------------------------
+\section{Fricke Involution}
+\begin{frame}{The Fricke Involution}
+Define by letting $Wf = f\vert_k \omega$ where
+\[
+\omega = 
+\begin{pmatrix}
+0 & -1/\sqrt{N}\\
+\sqrt{N} & 0
+\end{pmatrix}.
+\]
+
+\pause
+\textbf{Key facts:}
+\begin{itemize}
+    \item For $\gamma = \begin{pmatrix} a & b \\ cN & d \end{pmatrix} \in \Gamma_0(N)$,
+    \[
+    \omega \gamma = \gamma' \omega
+        \]
+    for some $\gamma' \in \Gamma_0(N)$.
+    \pause
+    \item Fricke Involution preserves modular and cusp forms, i.e. for $f \in M_k(\Gamma_0(N))$ or $\in S_k(\Gamma_0(N))$,
+    \[
+    (Wf)\vert_k \gamma = Wf.
+    \]
+    \pause
+    \item Fricke involution commutes with Hecke operators
+    \[
+    WT_n = T_nW
+    \]
+\end{itemize}
+\end{frame}
+
+%-------------------------------------------------------------
+\begin{frame}{Fricke and Hecke Commute}
+\textbf{The operators commute:}
+\[
+T_n W_N = W_N T_n.
+\]
+
+Consequences:
+\begin{itemize}
+    \item If $f\in S_k^{\text{new}}(\gamma_0(N))$ is a Hecke eigenform, then $f=cg$ where $g$ is a newform.
+    \pause
+    \item We can evaluate,
+    \[
+    T_n Wg = \lambda_n Wg.
+    \]
+    So $Wg$ is a Hecke eigenform.
+    \pause
+    \item Since $Wg=wh$ where $h$ is a newform, we get
+    \[
+    T_n h = \lambda_n h,
+    \]
+    \pause
+    \item So $g,h$ have same Hecke eigenvalues so $g=h$. Thus, $Wf=w f$ for some $w\in \mathbb{C}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fricke and Hecke Commute}
+\begin{lemma}
+If $f$ is a Hecke eigenform then $f$ is an eigenform of the Fricke involution. Specifically $Wf=\pm f$.
+\end{lemma}
+
+\end{frame}
+
+%-------------------------------------------------------------
+\section{The Functional Equation}
+\begin{frame}{Setting Up the Functional Equation}
+For a cusp form $f(z) = \sum a_n e^{2\pi i n z}$, define its $L$-function:
+\[
+L(f,s) = \sum_{n\ge1} a_n n^{-s}.
+\]
+
+Completed $L$-function (scaled by $N^{s/2}$):
+\[
+\Lambda(f,s) = N^{s/2} (2\pi)^{-s}\Gamma(s)L(f,s).
+\]
+
+\pause
+Use Mellin transform:
+\[
+\Lambda(f,s) = N^{s/2} \int_0^\infty f(it)\, t^{s} \frac{dt}{t}.
+\]
+\pause
+Split integral at $t = 1/\sqrt{N}$ (allowed by Fricke),
+\[
+N^{s/2}\left(\int_0^{1/\sqrt{N}} f(it)\, t^{s} \frac{dt}{t} + \int_{1/\sqrt{N}}^\infty f(it)\, t^{s} \frac{dt}{t} \right).
+\]
+\end{frame}
+
+%-------------------------------------------------------------
+\begin{frame}{Using Fricke and Final Equation}
+Compute:
+\[
+\int_0^{1/\sqrt{N}} f(it)\,t^{s} \frac{dt}{t}
+= \pm i^{\,k} N^{\frac{k}{2}-s}
+   \int_{1/\sqrt{N}}^\infty f(it)\,t^{k-s} \frac{dt}{t}.
+\]
+
+\pause
+\medskip
+
+Combining with the second piece yields:
+\[
+\boxed{\Lambda(f,s)
+= \pm\, i^{k}\, \Lambda(f, k-s).}
+\]
+
+\textbf{This is the functional equation for L-functions associated with Hecke eigenforms.}
+\end{frame}
+
+
+\begin{frame}{Acknowledgements}
+Much thanks to the DRP team and to my wonderful mentor Preston Tranbarger!
+
+\medskip
+
+\href{https://prestontranbarger.github.io/f/qualExams/OralQualNotes.pdf}{Click here for the notes used!}
+
+\medskip
+
+\centering
+\textbf{Thank you!}
+\end{frame}
+
+
+\end{document}
