@@ -13,6 +13,4 @@ This presentation introduces:
 - Theory of modular and cusp forms
 - Functional equations for L-functions associated with Hecke eigenforms
 
----
 
-*Created by Maria Baumgartner.*
